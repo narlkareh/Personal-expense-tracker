@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Expense Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fdf6e3, #d2b48c);
+      color: #3e2f1c;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+      color: #7a5917;
+    }
+
+    .form-group {
+      margin-bottom: 15pxx
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #c0a16b;
+      border-radius: 10px;
+      background-color: #fffaf0;
+    }
+
+    button {
+      background-color: #a67c52;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #8b6b3d;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .expense-item {
+      background-color: #fdf1dc;
+      border-left: 5px solid #caa472;
+      padding: 10px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px;
+    }
+
+    .total-display {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-top: 20px;
+      color: #7a4c1e;
+    }
+  </style>
+</head>
+<body>
+  <h1>Personal Expense Tracker</h1>
+
+  <div class="form-group">
+    <label for="expenseName">Expense Name:</label>
+    <input type="text" id="expenseName" placeholder="e.g., Groceries">
+  </div>
+
+  <div class="form-group">
+    <label for="expenseAmount">Amount (KES):</label>
+    <input type="number" id="expenseAmount" placeholder="e.g., 1000">
+  </div>
+
+  <button onclick="addExpense()">Add Expense</button>
+
+  <ul id="expenseList"></ul>
+
+  <div class="total-display" id="totalAmount"></div>
+
+  <script>
+    // Global expenses array
+    const expenses = [];
+
+    // Function to add an expense
+    function addExpense() {
+      const nameInput = document.getElementById('expenseName');
+      const amountInput = document.getElementById('expenseAmount');
+      const name = nameInput.value.trim();
+      const amount = parseFloat(amountInput.value);
+
+      // Input validation
+      if (!name || isNaN(amount) || amount <= 0) {
+        alert('Please enter a valid expense name and a positive amount.');
+        return;
+      }
+
+      const expense = {
+        name: name,
+        amount: amount
+      };
+
+      expenses.push(expense);
+      nameInput.value = '';
+      amountInput.value = '';
+
+      updateDisplay();
+    }
+
+    // Function to delete an expense by index
+    function deleteExpense(index) {
+      expenses.splice(index, 1);
+      updateDisplay();
+    }
+
+    // Function to update the displayed list and total
+    function updateDisplay() {
+      const list = document.getElementById('expenseList');
+      list.innerHTML = '';
+
+      let total = 0;
+
+      expenses.forEach((expense, index) => {
+        const item = document.createElement('li');
+        item.className = 'expense-item';
+
+        const info = document.createElement('span');
+        info.textContent = `${expense.name}: KES ${expense.amount.toLocaleString()}`;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.style.marginLeft = '15px';
+        deleteBtn.onclick = () => deleteExpense(index);
+
+        item.appendChild(info);
+        item.appendChild(deleteBtn);
+
+        list.appendChild(item);
+        total += expense.amount;
+      });
+
+      const totalAmountDisplay = document.getElementById('totalAmount');
+      totalAmountDisplay.textContent = `Total Spent: KES ${total.toLocaleString()}`;
+    }
+  </script>
+</body>
+</html>
